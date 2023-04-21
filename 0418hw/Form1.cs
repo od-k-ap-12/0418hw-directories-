@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -26,6 +27,15 @@ namespace _0418hw
 
         private void buttonFind_Click(object sender, EventArgs e)
         {
+            Thread th = new Thread(new ThreadStart(SearchFiles));
+            th.IsBackground = true;
+            th.Start();
+
+        }
+
+        private void SearchFiles()
+        {
+            Thread th = Thread.CurrentThread;
             button1.PerformClick();
             string[] Files;
             string path = comboBoxDisks.SelectedItem.ToString();
@@ -39,7 +49,7 @@ namespace _0418hw
                     listViewFiles.Items.Add(file.Name).SubItems.AddRange(subitems);
                 }
             }
-            else if (textBoxFile.Text == "*.txt" && textBoxFindByWordOrPhrase.Text!=string.Empty)
+            else if (textBoxFile.Text == "*.txt" && textBoxFindByWordOrPhrase.Text != string.Empty)
             {
 
                 Files = Directory.GetFiles(path, textBoxFile.Text);
@@ -70,10 +80,8 @@ namespace _0418hw
                     listViewFiles.Items.Add(file.Name).SubItems.AddRange(subitems);
                 }
             }
-
+            th.Abort();
         }
-
-
 
         private void button1_Click(object sender, EventArgs e)
         {
